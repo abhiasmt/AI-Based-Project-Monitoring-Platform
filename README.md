@@ -1,249 +1,418 @@
 # Contributing Guide
 
-Thank you for contributing to the **Web-Based Integrated Project Monitoring Platform**.
+Welcome to the **AI-Based Project Monitoring Platform** development team.
 
-This guide explains how our team should work with Git, GitHub branches, commits, pull requests, code reviews, and the different services of the project.
+This guide explains how contributors should clone the project, create a branch, make changes, push their branch, create a Pull Request, handle review changes, and keep their branch updated.
 
----
-
-## Development Workflow
-
-We use the following Git workflow:
-
-```text
-main
-  ↑
-  │ Release PR
-  │
-develop
-  ├── feature/frontend-dashboard
-  ├── feature/backend-auth
-  ├── feature/task-management
-  ├── feature/ai-risk-delay
-  ├── feature/resource-recommendation
-  └── feature/database
-```
-
-> **Note:** This is a conceptual workflow, not a literal Git branch hierarchy.
-
-### Branch Purpose
-
-| Branch | Purpose |
-|---|---|
-| `main` | Stable and release-ready code |
-| `develop` | Integration branch for ongoing development |
-| `feature/*` | Individual contributor work |
-| `fix/*` | Bug fixes |
-| `docs/*` | Documentation changes |
-
-Contributors should **not directly push to `main` or `develop`**.
+> **Important:** Never push directly to the `main` branch. All contributor changes must be submitted through a Pull Request.
 
 ---
 
-## Branch Naming
+## 1. Repository Workflow
 
-Use descriptive branch names.
-
-### Feature Branches
+The project uses the following workflow:
 
 ```text
-feature/frontend-dashboard
-feature/backend-auth
-feature/task-management
-feature/ai-risk-delay
-feature/resource-recommendation
-feature/database
+                    ┌─────────────────┐
+                    │      main       │
+                    │  Protected      │
+                    └────────┬────────┘
+                             ▲
+                             │
+                        Pull Request
+                             │
+                             │
+                    ┌────────┴────────┐
+                    │ Your Branch    │
+                    │ feature/login  │
+                    └────────┬────────┘
+                             │
+                       Make changes
+                             │
+                             ▼
+                    Commit → Push
 ```
 
-### Bug Fix Branches
+### Basic workflow
 
 ```text
-fix/login-error
-fix/task-api-error
-fix/dashboard-layout
-fix/authentication-error
+1. Clone repository
+2. Create your own branch
+3. Make changes
+4. Test your changes
+5. Commit changes
+6. Push your branch
+7. Create Pull Request
+8. Wait for review
+9. Fix requested changes if needed
+10. Pull Request gets merged
+11. Delete your old branch
+12. Start from updated main for the next task
 ```
-
-### Documentation Branches
-
-```text
-docs/update-readme
-docs/contributing-guide
-docs/api-documentation
-```
-
-### Branch Naming Rules
-
-- Use lowercase letters.
-- Use hyphens to separate words.
-- Keep names short and descriptive.
-- Do not use spaces.
-- Do not use vague names such as `mybranch`, `test`, or `new`.
 
 ---
 
-## First-Time Repository Setup
+# 2. Requirements
 
-Clone the repository:
+Before contributing, make sure you have installed:
+
+* Git
+* VS Code or another code editor
+* The required programming languages/tools for the project
+
+Check Git:
 
 ```bash
-git clone <repository-url>
+git --version
+```
+
+If Git is installed correctly, you will see something similar to:
+
+```text
+git version 2.x.x
+```
+
+---
+
+# 3. Clone the Repository
+
+Clone the repository to your computer:
+
+```bash
+git clone https://github.com/abhiasmt/AI-Based-Project-Monitoring-Platform.git
 ```
 
 Move into the project directory:
 
 ```bash
-cd project-monitoring-platform
+cd AI-Based-Project-Monitoring-Platform
 ```
 
-Check available branches:
+Check the remote repository:
 
 ```bash
-git branch -a
+git remote -v
 ```
 
-Switch to the `develop` branch:
+You should see the GitHub repository URL.
+
+---
+
+# 4. Check Your Current Branch
+
+Before doing anything, check your current branch:
 
 ```bash
-git checkout develop
+git branch
 ```
 
-Get the latest changes:
+You should normally see:
 
-```bash
-git pull origin develop
+```text
+* main
 ```
 
 ---
 
-## Creating a Feature Branch
+# 5. Always Update Main Before Creating a New Branch
 
-Always create your feature branch from the latest `develop` branch.
+Before starting a new task, make sure your local `main` is up to date.
+
+Run:
 
 ```bash
-git checkout develop
-git pull origin develop
+git checkout main
+```
+
+Then:
+
+```bash
+git pull origin main
+```
+
+This downloads the latest changes from GitHub.
+
+---
+
+# 6. Create Your Own Branch
+
+Never work directly on `main`.
+
+Create a new branch for your task:
+
+```bash
 git checkout -b feature/your-feature-name
 ```
 
 For example:
 
 ```bash
-git checkout -b feature/task-management
+git checkout -b feature/login-page
 ```
 
 Another example:
 
 ```bash
-git checkout -b feature/ai-risk-delay
+git checkout -b feature/project-dashboard
+```
+
+Another example:
+
+```bash
+git checkout -b fix/login-validation
+```
+
+Your branch name should clearly describe what you are working on.
+
+---
+
+# 7. Branch Naming Convention
+
+Use the following format:
+
+### New feature
+
+```text
+feature/feature-name
+```
+
+Example:
+
+```text
+feature/user-login
+```
+
+### Bug fix
+
+```text
+fix/bug-name
+```
+
+Example:
+
+```text
+fix/login-validation
+```
+
+### Documentation
+
+```text
+docs/documentation-name
+```
+
+Example:
+
+```text
+docs/contributing-guide
+```
+
+### UI changes
+
+```text
+ui/component-name
+```
+
+Example:
+
+```text
+ui/dashboard
+```
+
+### Refactoring
+
+```text
+refactor/component-name
+```
+
+Example:
+
+```text
+refactor/authentication
 ```
 
 ---
 
-## Working on Your Feature
+# 8. Confirm Your Branch
 
-Make your changes inside your assigned area of the project.
+After creating the branch:
 
-While working, regularly check the status of your repository:
+```bash
+git branch
+```
+
+Example:
+
+```text
+* feature/login-page
+  main
+```
+
+The `*` shows your current branch.
+
+You can also use:
 
 ```bash
 git status
 ```
 
-To see exactly what you have changed:
+It should show something similar to:
 
-```bash
-git diff
+```text
+On branch feature/login-page
 ```
-
-Before committing, make sure that:
-
-- You only changed files related to your task.
-- You did not accidentally modify another contributor's work.
-- You did not add secrets or passwords.
-- Your code works locally.
-- Existing functionality is not unnecessarily broken.
 
 ---
 
-## Commit Messages
+# 9. Work on Your Task
 
-Commit messages should clearly explain what was changed.
+Now you can modify the project.
 
-### Good Commit Messages
-
-```text
-Add task creation API
-Fix authentication middleware
-Implement project dashboard
-Add risk prediction endpoint
-Update Prisma schema
-Add resource recommendation algorithm
-Fix project status update
-```
-
-### Avoid
+For example:
 
 ```text
-update
-changes
-done
-final
-test
-abc
-work
+src/
+├── components/
+├── pages/
+├── services/
+└── ...
 ```
 
-A good commit message should explain **what the commit does**.
+Make only the changes required for your assigned task.
+
+Avoid modifying unrelated files unless necessary.
 
 ---
 
-## Committing Changes
+# 10. Check Your Changes
 
-After completing your work, check your changes:
+Before committing, check which files have changed:
 
 ```bash
 git status
 ```
 
-Review the differences:
+Example:
+
+```text
+modified: src/components/Login.jsx
+modified: src/pages/LoginPage.jsx
+```
+
+To see the actual changes:
 
 ```bash
 git diff
 ```
 
-Add your changes:
+Review your changes carefully.
+
+---
+
+# 11. Test Your Changes
+
+Before creating a Pull Request, make sure your changes work correctly.
+
+Run the project's required commands.
+
+For example, if it is a Node/React project:
+
+```bash
+npm install
+```
+
+Then:
+
+```bash
+npm run dev
+```
+
+If the project contains tests:
+
+```bash
+npm test
+```
+
+If the project has a build command:
+
+```bash
+npm run build
+```
+
+> Use the commands defined by the project. Do not run commands that are not required for your part of the project.
+
+---
+
+# 12. Add Your Changes
+
+After testing, stage your changes:
 
 ```bash
 git add .
 ```
 
-Create a commit:
+Or, preferably, add specific files:
 
 ```bash
-git commit -m "Add task creation API"
+git add src/components/Login.jsx
 ```
 
-Check your recent commits:
+Check what is staged:
 
 ```bash
-git log --oneline -5
+git status
 ```
 
 ---
 
-## Push Your Feature Branch
+# 13. Commit Your Changes
 
-Push your feature branch to GitHub:
+Create a meaningful commit:
 
 ```bash
-git push -u origin feature/your-feature-name
+git commit -m "Add login page"
 ```
 
-Example:
+Good commit messages:
+
+```text
+Add login page
+Fix login validation
+Add project dashboard
+Update API integration
+Fix navbar responsiveness
+Add project creation form
+Update authentication service
+```
+
+Avoid messages like:
+
+```text
+update
+changes
+done
+test
+abc
+final
+```
+
+Your commit message should explain what you changed.
+
+---
+
+# 14. Push Your Branch
+
+The first time you push a new branch:
 
 ```bash
-git push -u origin feature/task-management
+git push -u origin feature/login-page
+```
+
+Replace the branch name with your own branch.
+
+For example:
+
+```bash
+git push -u origin feature/project-dashboard
 ```
 
 After the first push, you can normally use:
@@ -254,146 +423,185 @@ git push
 
 ---
 
-## Pull Requests
+# 15. Create a Pull Request
 
-After pushing your feature branch to GitHub, create a **Pull Request (PR)**.
+After pushing your branch, go to the GitHub repository.
 
-The normal flow is:
+You should see an option such as:
 
 ```text
-feature/task-management
-          │
-          ▼
-        Pull Request
-          │
-          ▼
-       develop
+Compare & pull request
 ```
 
-### Pull Request Steps
+Click it.
 
-1. Open the GitHub repository.
-2. Go to **Pull Requests**.
-3. Click **New Pull Request**.
-4. Select your feature branch.
-5. Set the base branch to `develop`.
-6. Add a clear title.
-7. Explain what you changed.
-8. Mention how you tested the changes.
-9. Request a review from the appropriate team member.
-10. Wait for approval.
-11. Fix review comments if required.
-12. Merge the PR after approval.
+Set:
+
+```text
+base: main
+compare: feature/login-page
+```
+
+Your Pull Request should look like:
+
+```text
+feature/login-page  →  main
+```
 
 ---
 
-## Pull Request Title
+# 16. Pull Request Title
 
-Use a descriptive title.
+Use a clear title.
 
-### Good
+Good examples:
 
 ```text
-Add task management API
-Implement project dashboard
-Add AI risk prediction endpoint
-Fix authentication issue
-Add resource recommendation
-Update database schema
+Add login page
+Fix authentication validation
+Add project dashboard
+Implement project creation
+Fix dashboard responsive layout
+Add project API integration
 ```
 
-### Avoid
+Avoid:
 
 ```text
 Update
 Changes
 My work
+Please merge
 Final
-Done
-Test
 ```
 
 ---
 
-## Pull Request Description
+# 17. Pull Request Description
 
-A good PR should explain what was changed and how it was tested.
+Explain what you changed.
 
-Example:
+A good Pull Request description should include:
 
-```markdown
-## What changed?
+```text
+## What was changed?
 
-- Added task creation API
-- Added task update API
-- Added task deletion API
-- Added task validation
+- Added login page
+- Added email/password validation
+- Added login API integration
 
 ## Testing
 
-- Tested task creation
-- Tested task updates
-- Tested task deletion
-- Tested invalid task requests
+- Tested login with valid credentials
+- Tested invalid credentials
+- Tested empty fields
 
-## Related Issue
+## Screenshots
 
-Closes #12
+Add screenshots if the changes affect the UI.
 ```
 
 ---
 
-## Code Review
+# 18. Pull Request Review
 
-Every Pull Request should be reviewed before merging.
+After creating the Pull Request, the maintainer will review your changes.
 
-Reviewers should check:
+There are three possible outcomes.
 
-- Code quality
-- Correctness
-- Security
-- API design
-- Database changes
-- Error handling
-- Naming
-- Testing
-- Unnecessary code
-- Performance where relevant
-- Compatibility with existing features
+### Approved
 
-If changes are requested, update your branch and push again.
+Your Pull Request is approved and can be merged.
+
+```text
+feature/login-page
+        ↓
+   Pull Request
+        ↓
+     Approved
+        ↓
+       main
+```
+
+### Changes requested
+
+The maintainer may request changes.
+
+For example:
+
+```text
+Please improve the validation logic.
+```
+
+Do not create another Pull Request.
+
+Simply make the requested changes on the **same branch**.
+
+---
+
+# 19. Making Changes After Review
+
+If changes are requested, stay on your existing branch:
+
+```bash
+git checkout feature/login-page
+```
+
+Make the requested changes.
+
+Then:
 
 ```bash
 git add .
-git commit -m "Address review comments"
+```
+
+Commit:
+
+```bash
+git commit -m "Fix login validation"
+```
+
+Push:
+
+```bash
 git push
 ```
 
 The existing Pull Request will automatically update.
 
+You do **not** need to create another Pull Request.
+
 ---
 
-## Keeping Your Feature Branch Updated
+# 20. Keep Your Branch Updated
 
-While you are working, other contributors may merge changes into `develop`.
+Sometimes other contributors' Pull Requests get merged while you are working.
 
-First update your local `develop` branch:
+Your branch may then become outdated.
+
+First, make sure all your current work is committed:
 
 ```bash
-git checkout develop
-git pull origin develop
+git status
 ```
 
-Then return to your feature branch:
+Then update `main`:
 
 ```bash
-git checkout feature/your-feature-name
+git checkout main
+git pull origin main
 ```
 
-Merge the latest `develop` changes:
+Go back to your branch:
 
 ```bash
-git merge develop
+git checkout feature/login-page
+```
+
+Then merge the latest `main` into your branch:
+
+```bash
+git merge main
 ```
 
 If there are no conflicts:
@@ -402,19 +610,27 @@ If there are no conflicts:
 git push
 ```
 
-If there are conflicts, follow the **Merge Conflicts** section below.
+Your Pull Request will now contain the latest version of `main`.
 
 ---
 
-## Merge Conflicts
+# 21. Handling Merge Conflicts
 
-If Git reports a conflict, you may see something like:
+Sometimes Git will report a conflict:
 
 ```text
-CONFLICT (content): Merge conflict in <file>
+CONFLICT (content): Merge conflict in ...
 ```
 
-Open the affected file.
+Run:
+
+```bash
+git status
+```
+
+Git will tell you which files have conflicts.
+
+Open the conflicted files.
 
 You may see:
 
@@ -422,843 +638,516 @@ You may see:
 <<<<<<< HEAD
 Your changes
 =======
-Changes from develop
->>>>>>> develop
+Changes from main
+>>>>>>> main
 ```
 
 Decide which code should remain.
 
-After resolving the conflict, remove the conflict markers:
+Remove the conflict markers:
 
 ```text
 <<<<<<< HEAD
 =======
->>>>>>> develop
+>>>>>>> main
 ```
 
-Then check the repository:
+Then save the file.
 
-```bash
-git status
-```
-
-Add the resolved files:
+Stage the resolved file:
 
 ```bash
 git add .
 ```
 
-Commit the resolution:
+Complete the merge:
 
 ```bash
 git commit -m "Resolve merge conflicts"
 ```
 
-Push the changes:
+Push the updated branch:
 
 ```bash
 git push
 ```
 
-If you are unsure how to resolve a conflict, **ask the project lead before choosing a solution**.
+Your Pull Request will update automatically.
 
 ---
 
-# Project Structure
+# 22. Important: Do Not Push to Main
 
-The project uses the following main structure:
-
-```text
-project-monitoring-platform/
-│
-├── frontend/
-├── backend/
-├── ai-service/
-├── database/
-│
-├── .github/
-│   └── workflows/
-│
-├── .gitignore
-├── .env.example
-├── docker-compose.yml
-└── README.md
-```
-
----
-
-## Frontend Development
-
-The frontend uses:
-
-```text
-React
-Tailwind CSS
-Recharts
-```
-
-Frontend code belongs inside:
-
-```text
-frontend/
-```
-
-Recommended structure:
-
-```text
-frontend/
-└── src/
-    ├── assets/
-    ├── components/
-    │   ├── common/
-    │   ├── dashboard/
-    │   ├── projects/
-    │   ├── tasks/
-    │   ├── team/
-    │   ├── risks/
-    │   └── ai/
-    │
-    ├── pages/
-    ├── services/
-    ├── hooks/
-    ├── context/
-    ├── utils/
-    ├── routes/
-    ├── App.jsx
-    └── main.jsx
-```
-
-### Frontend Guidelines
-
-- Create reusable components.
-- Avoid duplicating UI code.
-- Keep API calls inside service files.
-- Keep pages organized.
-- Use meaningful component names.
-- Keep styling consistent with the existing design.
-- Do not modify unrelated components without a reason.
-
----
-
-## Backend Development
-
-The backend uses:
-
-```text
-Node.js
-Express.js
-Prisma
-PostgreSQL
-JWT
-bcrypt
-Socket.IO
-```
-
-Backend code belongs inside:
-
-```text
-backend/
-```
-
-Recommended structure:
-
-```text
-backend/
-├── src/
-│   ├── config/
-│   ├── controllers/
-│   ├── routes/
-│   ├── middleware/
-│   ├── services/
-│   └── server.js
-│
-├── prisma/
-│   ├── schema.prisma
-│   └── migrations/
-│
-└── package.json
-```
-
-### Backend Guidelines
-
-- Keep routes organized.
-- Keep business logic inside services/controllers.
-- Validate incoming data.
-- Handle errors properly.
-- Never expose passwords or secrets.
-- Use authentication middleware where required.
-- Follow the existing API structure.
-
----
-
-## Database Development
-
-The project uses:
-
-```text
-PostgreSQL
-     │
-     ▼
-   Prisma
-```
-
-PostgreSQL is used because the project contains structured and relational data such as:
-
-- Users
-- Organizations
-- Projects
-- Milestones
-- Tasks
-- Risks
-- Issues
-- Resources
-- Progress updates
-- Documents
-
-### Prisma Schema
-
-The main Prisma schema is located at:
-
-```text
-backend/prisma/schema.prisma
-```
-
-After modifying the Prisma schema, create a migration:
+As a contributor, do NOT run:
 
 ```bash
-npx prisma migrate dev --name your_migration_name
+git push origin main
 ```
 
-Example:
+Your direct push to `main` will be blocked by the repository rules.
+
+Instead:
 
 ```bash
-npx prisma migrate dev --name add_project_status
+git push origin your-branch-name
 ```
 
-Do not manually modify another contributor's migration without discussing it with the team.
-
----
-
-## AI Service Development
-
-The AI service uses:
-
-```text
-Python
-FastAPI
-scikit-learn
-XGBoost
-```
-
-AI code belongs inside:
-
-```text
-ai-service/
-```
-
-Recommended structure:
-
-```text
-ai-service/
-├── app/
-│   ├── main.py
-│   │
-│   ├── models/
-│   │   ├── risk_model.py
-│   │   └── delay_model.py
-│   │
-│   ├── prediction/
-│   │   ├── risk_prediction.py
-│   │   └── delay_prediction.py
-│   │
-│   ├── recommendation/
-│   │   └── resource_recommendation.py
-│   │
-│   ├── schemas/
-│   │   └── prediction_schema.py
-│   │
-│   └── utils/
-│
-├── training/
-│   ├── train_risk_model.py
-│   └── train_delay_model.py
-│
-├── trained_models/
-├── requirements.txt
-└── Dockerfile
-```
-
----
-
-## Core AI Features
-
-The project focuses on two main AI features.
-
-### 1. AI Risk & Delay Prediction
-
-The system predicts whether a project or task is likely to experience a delay.
-
-Possible input factors include:
-
-- Current progress
-- Remaining days
-- Overdue tasks
-- Task priority
-- Team workload
-- Previous delays
-- Task dependencies
-- Milestone progress
-
-The system can produce results such as:
-
-```text
-Risk Level: HIGH
-Delay Probability: 82%
-Expected Delay: 4 days
-```
-
-The recommended machine learning model is:
-
-```text
-XGBoost
-```
-
-with:
-
-```text
-scikit-learn
-```
-
-for preprocessing and evaluation.
-
----
-
-### 2. AI Resource Recommendation
-
-The system recommends suitable team members for tasks.
-
-Possible factors include:
-
-- Required skills
-- Employee skills
-- Availability
-- Current workload
-- Past performance
-- Task requirements
-
-A recommendation can initially use a weighted scoring approach:
-
-```text
-Skill Match       → 40%
-Availability      → 25%
-Current Workload  → 20%
-Past Performance  → 15%
-```
-
-Example:
-
-```text
-Recommended Member: Amit
-
-Skill Match: 92%
-Availability: High
-Current Workload: Low
-Overall Score: 88%
-```
-
----
-
-## LLM and RAG
-
-The core AI features **do not require an LLM or RAG**.
-
-We are not adding AI technologies simply for the sake of calling the project "AI-powered".
-
-### Current AI Architecture
-
-```text
-Project Data
-     │
-     ▼
-Python FastAPI
-     │
-     ├───────────────┐
-     ▼               ▼
-XGBoost       Recommendation
-     │             Algorithm
-     ▼               ▼
-Risk/Delay      Best Resource
-Prediction      Recommendation
-```
-
-LLM/RAG may be considered in the future for optional features such as:
-
-- Project AI Assistant
-- Document Question Answering
-- AI Report Generation
-
-These are not part of the core implementation unless the team decides to add them later.
-
----
-
-## Environment Variables
-
-Never commit real secrets or credentials.
-
-Do **not** commit:
-
-```text
-.env
-```
-
-Use:
-
-```text
-.env.example
-```
-
-Example:
-
-```env
-DATABASE_URL=
-JWT_SECRET=
-AI_SERVICE_URL=
-```
-
-Each contributor should create their own local `.env` file.
-
----
-
-## Files That Should Not Be Committed
-
-Do not commit unnecessary generated files or secrets.
-
-Common examples:
-
-```text
-.env
-node_modules/
-__pycache__/
-*.pyc
-dist/
-build/
-*.log
-```
-
-Always check `.gitignore` before committing.
-
----
-
-## Testing
-
-Before creating a Pull Request, make sure your feature works correctly.
-
-At minimum:
-
-```text
-✓ Application starts
-✓ No obvious console errors
-✓ API works
-✓ Database operations work
-✓ UI works
-✓ AI service works if applicable
-✓ Existing features are not broken
-```
-
-Run the project's available tests before opening a PR.
-
----
-
-## GitHub Actions
-
-GitHub Actions workflows may be stored in:
-
-```text
-.github/
-└── workflows/
-    ├── frontend.yml
-    ├── backend.yml
-    └── ai-service.yml
-```
-
-These workflows can automatically perform tasks such as:
-
-- Installing dependencies
-- Running tests
-- Running lint checks
-- Building the frontend
-- Checking the backend
-- Testing the AI service
-
-Do not create empty workflow files just for appearance.
-
-Only add workflows when they contain actual CI/CD configuration.
-
----
-
-## What Contributors Should NOT Do
-
-Contributors should **not**:
-
-- Directly push to `main`.
-- Directly push to `develop`.
-- Force-push shared branches.
-- Delete shared branches.
-- Commit passwords or API keys.
-- Commit `.env` files.
-- Modify unrelated features.
-- Rewrite another contributor's work without discussion.
-- Merge their own PR without following the review process.
-- Commit unnecessary generated files.
-- Make major architectural changes without discussing them with the team.
-
----
-
-## Dangerous Git Commands
-
-Be careful with commands such as:
+For example:
 
 ```bash
-git reset --hard
-git push --force
-git branch -D
+git push origin feature/login-page
 ```
 
-These commands can permanently remove or overwrite work.
-
-Never use force push on shared branches such as:
-
-```text
-main
-develop
-```
-
-If you are unsure about a Git command, ask the project lead before running it.
+Then create a Pull Request.
 
 ---
 
-## Main Branch Protection
+# 23. After Your Pull Request Is Merged
 
-The `main` branch should be protected.
-
-Recommended rules:
-
-- Pull Request required.
-- At least 1 approval required.
-- Conversation resolution required.
-- Status checks required once CI is configured.
-- Force pushes blocked.
-- Branch deletion restricted.
-
-The normal release flow is:
-
-```text
-Feature Branch
-      │
-      ▼
-Pull Request
-      │
-      ▼
-develop
-      │
-      ▼
-Integration Testing
-      │
-      ▼
-Pull Request
-      │
-      ▼
-main
-```
-
----
-
-## After Your Pull Request Is Merged
-
-Once your feature has been merged into `develop`, you can delete the feature branch.
-
-Delete the local branch:
+Once your Pull Request has been merged, update your local `main`:
 
 ```bash
-git branch -d feature/your-feature-name
+git checkout main
+git pull origin main
+```
+
+You can delete your local feature branch:
+
+```bash
+git branch -d feature/login-page
 ```
 
 Delete the remote branch:
 
 ```bash
-git push origin --delete feature/your-feature-name
+git push origin --delete feature/login-page
 ```
 
-Then update your local repository:
-
-```bash
-git checkout develop
-git pull origin develop
-```
+> GitHub may also provide a **Delete branch** button after the Pull Request is merged.
 
 ---
 
-## Daily Git Workflow
+# 24. Starting Your Next Task
 
-A typical development session should look like this:
+Always start from the latest `main`.
 
 ```bash
-git checkout develop
-git pull origin develop
-
-git checkout feature/my-feature
-
-# Work on your feature
-
-git status
-git diff
-
-git add .
-git commit -m "Implement my feature"
-
-git push
+git checkout main
+git pull origin main
 ```
 
-Then create or update your Pull Request.
+Create a new branch:
+
+```bash
+git checkout -b feature/new-feature
+```
+
+Then work normally:
+
+```bash
+git add .
+git commit -m "Add new feature"
+git push -u origin feature/new-feature
+```
+
+Create a Pull Request.
 
 ---
 
-## Complete Example
+# 25. Complete Example
 
-Suppose you are responsible for the task management module.
+Suppose you are assigned:
 
-### Step 1 — Update develop
+> Create the project dashboard.
 
-```bash
-git checkout develop
-git pull origin develop
-```
-
-### Step 2 — Create your feature branch
+### Step 1 — Update main
 
 ```bash
-git checkout -b feature/task-management
+git checkout main
+git pull origin main
 ```
 
-### Step 3 — Work on the feature
+### Step 2 — Create branch
 
-Implement the required functionality.
+```bash
+git checkout -b feature/project-dashboard
+```
 
-### Step 4 — Check your changes
+### Step 3 — Make your changes
+
+Edit the required files.
+
+### Step 4 — Check changes
 
 ```bash
 git status
 git diff
 ```
 
-### Step 5 — Commit
+### Step 5 — Test
+
+Run the required project tests/build commands.
+
+### Step 6 — Stage
 
 ```bash
 git add .
-git commit -m "Implement task management"
 ```
 
-### Step 6 — Push
+### Step 7 — Commit
 
 ```bash
-git push -u origin feature/task-management
+git commit -m "Add project dashboard"
 ```
 
-### Step 7 — Create Pull Request
+### Step 8 — Push
 
-Create:
+```bash
+git push -u origin feature/project-dashboard
+```
+
+### Step 9 — Create Pull Request
+
+On GitHub:
 
 ```text
-feature/task-management → develop
+feature/project-dashboard
+            ↓
+      Pull Request
+            ↓
+          main
 ```
 
-### Step 8 — Code Review
+### Step 10 — Review
 
-Wait for the team member to review your PR.
+Wait for the maintainer to review your Pull Request.
 
-### Step 9 — Fix Review Comments
+### Step 11 — If changes are requested
 
-If changes are requested:
+Make changes:
 
 ```bash
 git add .
-git commit -m "Address review comments"
+git commit -m "Fix dashboard layout"
 git push
 ```
 
-### Step 10 — Merge
+The same Pull Request will update.
 
-After approval, the PR can be merged into `develop`.
+### Step 12 — After approval
+
+The maintainer merges the Pull Request into `main`.
+
+### Step 13 — Update local repository
+
+```bash
+git checkout main
+git pull origin main
+```
 
 ---
 
-## Useful Git Commands
+# 26. Useful Git Commands
 
-### Check Current Branch
+### Check current branch
 
 ```bash
 git branch
 ```
 
-### List All Branches
-
-```bash
-git branch -a
-```
-
-### Switch Branch
-
-```bash
-git checkout branch-name
-```
-
-### Create and Switch to a New Branch
-
-```bash
-git checkout -b branch-name
-```
-
-### Get Latest Changes
-
-```bash
-git pull
-```
-
-### Pull Latest Develop
-
-```bash
-git checkout develop
-git pull origin develop
-```
-
-### Check Repository Status
+### Check repository status
 
 ```bash
 git status
 ```
 
-### View Changes
+### Show all branches
 
 ```bash
-git diff
+git branch -a
 ```
 
-### Stage Changes
+### Create a branch
+
+```bash
+git checkout -b branch-name
+```
+
+### Switch branch
+
+```bash
+git checkout branch-name
+```
+
+### Update main
+
+```bash
+git checkout main
+git pull origin main
+```
+
+### Stage changes
 
 ```bash
 git add .
 ```
 
-### Commit Changes
+### Commit
 
 ```bash
-git commit -m "Your commit message"
+git commit -m "Your message"
 ```
 
-### Push Changes
-
-```bash
-git push
-```
-
-### Push New Branch
+### Push branch
 
 ```bash
 git push -u origin branch-name
 ```
 
-### Fetch Remote Changes
+### Push after the first push
 
 ```bash
-git fetch
+git push
 ```
 
-### View Recent Commits
+### View commit history
 
 ```bash
-git log --oneline -10
+git log --oneline
+```
+
+### See changes
+
+```bash
+git diff
+```
+
+### Delete local branch
+
+```bash
+git branch -d branch-name
+```
+
+### Delete remote branch
+
+```bash
+git push origin --delete branch-name
 ```
 
 ---
 
-## Pull Request Checklist
+# 27. What Contributors Should NOT Do
 
-Before submitting a Pull Request:
+### ❌ Do not work directly on main
+
+```bash
+git checkout main
+```
+
+and start making project changes.
+
+Instead create a branch.
+
+### ❌ Do not push directly to main
+
+```bash
+git push origin main
+```
+
+### ❌ Do not use force push
+
+Avoid:
+
+```bash
+git push --force
+```
+
+especially on shared branches.
+
+### ❌ Do not create unnecessary Pull Requests
+
+If your existing Pull Request needs changes, update the **same branch**.
+
+### ❌ Do not mix unrelated tasks
+
+For example, if your task is:
 
 ```text
-[ ] My branch is based on develop
-[ ] My code works locally
-[ ] I tested my changes
-[ ] I checked git status
-[ ] I reviewed git diff
-[ ] Commit messages are meaningful
-[ ] No .env or secrets are committed
-[ ] No unnecessary files are included
-[ ] I did not modify unrelated features
-[ ] PR title is clear
-[ ] PR description explains the changes
-[ ] I am ready for code review
+Add login page
 ```
 
----
-
-## Team Rules
-
-1. Always work on a feature or fix branch.
-2. Never work directly on `main`.
-3. Never work directly on `develop`.
-4. Keep commits meaningful.
-5. Keep Pull Requests focused.
-6. Review other team members' Pull Requests.
-7. Communicate before making major architectural changes.
-8. Never commit secrets.
-9. Never force-push shared branches.
-10. Test your changes before creating a Pull Request.
-11. Keep `develop` stable.
-12. Ask for help when you are stuck.
-
----
-
-## Golden Workflow
+Do not also change:
 
 ```text
-1. Pull latest develop
-        ↓
-2. Create feature branch
-        ↓
-3. Write code
-        ↓
-4. Test locally
-        ↓
-5. Check git diff
-        ↓
-6. Commit changes
-        ↓
-7. Push feature branch
-        ↓
-8. Create Pull Request
-        ↓
-9. Code review
-        ↓
-10. Fix review comments
-        ↓
-11. Merge into develop
-        ↓
-12. Integration testing
-        ↓
-13. Release develop → main
+Dashboard
+Database
+Navbar
+Documentation
+```
+
+unless those changes are required.
+
+### ❌ Do not commit sensitive information
+
+Never commit:
+
+```text
+.env
+API keys
+Passwords
+Database credentials
+Access tokens
+Private keys
+```
+
+Use environment variables instead.
+
+---
+
+# 28. Recommended Commit Workflow
+
+For every task, follow:
+
+```bash
+git checkout main
+git pull origin main
+
+git checkout -b feature/your-feature
+
+# Make your changes
+
+git status
+git diff
+
+# Test your changes
+
+git add .
+git commit -m "Describe your changes"
+
+git push -u origin feature/your-feature
+```
+
+Then create a Pull Request on GitHub.
+
+---
+
+# 29. Recommended Pull Request Workflow
+
+```text
+┌─────────────────────────┐
+│ Update local main       │
+└────────────┬────────────┘
+             ↓
+┌─────────────────────────┐
+│ Create feature branch   │
+└────────────┬────────────┘
+             ↓
+┌─────────────────────────┐
+│ Write code              │
+└────────────┬────────────┘
+             ↓
+┌─────────────────────────┐
+│ Test changes            │
+└────────────┬────────────┘
+             ↓
+┌─────────────────────────┐
+│ Commit changes           │
+└────────────┬────────────┘
+             ↓
+┌─────────────────────────┐
+│ Push feature branch     │
+└────────────┬────────────┘
+             ↓
+┌─────────────────────────┐
+│ Create Pull Request     │
+└────────────┬────────────┘
+             ↓
+┌─────────────────────────┐
+│ Code review             │
+└────────────┬────────────┘
+             ↓
+       ┌─────┴─────┐
+       ↓           ↓
+   Changes      Approved
+   requested       │
+       │           ↓
+       │       Merge to main
+       │
+       └──► Fix → Commit → Push
+                    │
+                    └──► PR updates
 ```
 
 ---
 
-## Important Rule
+# 30. Golden Rules
 
-> **Never work directly on `main` or `develop`. Create a feature branch, make your changes, push the branch, and create a Pull Request.**
+Always remember these rules:
+
+1. **Never push directly to `main`.**
+2. **Create a separate branch for every task.**
+3. **Keep branch names meaningful.**
+4. **Write meaningful commit messages.**
+5. **Test your code before creating a Pull Request.**
+6. **Keep Pull Requests focused on one task.**
+7. **Respond to review comments.**
+8. **Use the same branch when fixing requested changes.**
+9. **Keep your branch updated with `main` when necessary.**
+10. **Never commit passwords, API keys, or `.env` files.**
+11. **Do not use force push on shared branches.**
+12. **Delete your feature branch after the Pull Request is merged.**
+
+---
+
+# 31. Quick Reference
+
+For a new task:
+
+```bash
+git checkout main
+git pull origin main
+
+git checkout -b feature/my-feature
+
+# Make changes
+
+git add .
+git commit -m "Add my feature"
+
+git push -u origin feature/my-feature
+```
+
+Then:
+
+```text
+GitHub
+  ↓
+Create Pull Request
+  ↓
+feature/my-feature → main
+  ↓
+Code Review
+  ↓
+Fix changes if requested
+  ↓
+Approval
+  ↓
+Merge
+```
+
+After merging:
+
+```bash
+git checkout main
+git pull origin main
+```
+
+You are now ready for your next task.
 
 ---
 
 ## Thank You
 
-Thank you for contributing to the **Web-Based Integrated Project Monitoring Platform**.
+Thank you for contributing to the **AI-Based Project Monitoring Platform**.
 
-Let's keep the codebase clean, organized, secure, and easy for the entire team to work with.
+Please follow this workflow so that the project remains organized, stable, and easy for everyone to work on.
