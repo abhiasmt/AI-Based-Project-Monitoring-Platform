@@ -25,6 +25,20 @@ enum ProjectStatus {
   CANCELLED
 }
 
+enum ProjectDomain {
+  SOFTWARE
+  CONSTRUCTION
+  EDUCATION
+  HEALTHCARE
+  MANUFACTURING
+  AGRICULTURE
+  GOVERNMENT
+  RESEARCH
+  ENERGY
+  FINANCE
+  OTHER
+}
+
 enum TaskStatus {
   TODO
   IN_PROGRESS
@@ -119,6 +133,7 @@ model Project {
   id          String        @id @default(uuid())
   name        String
   description String?
+  domain      ProjectDomain @default(OTHER)
   status      ProjectStatus @default(PLANNING)
 
   startDate DateTime?
@@ -142,6 +157,7 @@ model Project {
 
   @@index([organizationId])
   @@index([status])
+  @@index([domain])
 }
 
 model Milestone {
