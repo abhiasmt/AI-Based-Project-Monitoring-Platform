@@ -1,0 +1,326 @@
+generator client {
+  provider               = "prisma-client"
+  output                 = "../generated/prisma"
+  moduleFormat           = "esm"
+  generatedFileExtension = "ts"
+  importFileExtension    = "ts"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum UserRole {
+  ADMIN
+  MANAGER
+  TEAM_MEMBER
+  STAKEHOLDER
+}
+
+enum ProjectStatus {
+  PLANNING
+  ACTIVE
+  ON_HOLD
+  COMPLETED
+  CANCELLED
+}
+
+enum TaskStatus {
+  TODO
+  IN_PROGRESS
+  COMPLETED
+  BLOCKED
+}
+
+enum TaskPriority {
+  LOW
+  MEDIUM
+  HIGH
+  CRITICAL
+}
+
+enum RiskLevel {
+  LOW
+  MEDIUM
+  HIGH
+  CRITICAL
+}
+
+enum RiskStatus {
+  OPEN
+  MITIGATED
+  CLOSED
+}
+
+enum IssueStatus {
+  OPEN
+  IN_PROGRESS
+  RESOLVED
+  CLOSED
+}
+
+enum NotificationType {
+  TASK_ASSIGNED
+  TASK_UPDATED
+  DEADLINE_APPROACHING
+  RISK_ALERT
+  ISSUE_CREATED
+  PROJECT_UPDATE
+  SYSTEM
+}
+
+model User {
+  id           String   @id @default(uuid())
+  name         String
+  email        String   @unique
+  passwordHash String
+  role         UserRole @default(TEAM_MEMBER)
+
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  createdProjects Project[] @relation("ProjectCreator")
+
+  assignedTasks Task[] @relation("TaskAssignee")
+
+  createdTasks Task[] @relation("TaskCreator")
+
+  reportedRisks Risk[] @relation("RiskReporter")
+
+  assignedRisks Risk[] @relation("RiskOwner")
+
+  reportedIssues Issue[] @relation("IssueReporter")
+
+  assignedIssues Issue[] @relation("IssueAssignee")
+
+  progressUpdates ProgressUpdate[]
+
+  uploadedDocuments Document[]
+
+  notifications Notification[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Organization {
+  id          String  @id @default(uuid())
+  name        String
+  description String?
+
+  users    User[]
+  projects Project[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Project {
+  id          String        @id @default(uuid())
+  name        String
+  description String?
+  status      ProjectStatus @default(PLANNING)
+
+  startDate DateTime?
+  endDate   DateTime?
+
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  createdById String
+  createdBy   User   @relation("ProjectCreator", fields: [createdById], references: [id])
+
+  milestones      Milestone[]
+  tasks           Task[]
+  risks           Risk[]
+  issues          Issue[]
+  progressUpdates ProgressUpdate[]
+  documents       Document[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([organizationId])
+  @@index([status])
+}
+
+model Milestone {
+  id          String  @id @default(uuid())
+  name        String
+  description String?
+
+  startDate DateTime?
+  dueDate   DateTime?
+
+  completed Boolean @default(false)
+
+  projectId String
+  project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  tasks Task[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([projectId])
+}
+
+model Task {
+  id          String  @id @default(uuid())
+  title       String
+  description String?
+
+  status   TaskStatus   @default(TODO)
+  priority TaskPriority @default(MEDIUM)
+
+  startDate DateTime?
+  dueDate   DateTime?
+
+  progress Int @default(0)
+
+  projectId String
+  project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  milestoneId String?
+  milestone   Milestone? @relation(fields: [milestoneId], references: [id], onDelete: SetNull)
+
+  assigneeId String?
+  assignee   User?   @relation("TaskAssignee", fields: [assigneeId], references: [id], onDelete: SetNull)
+
+  createdById String
+  createdBy   User   @relation("TaskCreator", fields: [createdById], references: [id])
+
+  dependencies TaskDependency[] @relation("TaskDependencies")
+
+  dependentOn TaskDependency[] @relation("TaskDependents")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([projectId])
+  @@index([assigneeId])
+  @@index([status])
+  @@index([dueDate])
+}
+
+model TaskDependency {
+  id String @id @default(uuid())
+
+  taskId String
+  task   Task   @relation("TaskDependencies", fields: [taskId], references: [id], onDelete: Cascade)
+
+  dependsOnTaskId String
+  dependsOnTask   Task   @relation("TaskDependents", fields: [dependsOnTaskId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+
+  @@unique([taskId, dependsOnTaskId])
+}
+
+model Risk {
+  id          String  @id @default(uuid())
+  title       String
+  description String?
+
+  probability Float?
+  impact      Float?
+
+  level  RiskLevel  @default(MEDIUM)
+  status RiskStatus @default(OPEN)
+
+  mitigationPlan String?
+
+  projectId String
+  project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  reportedById String
+  reportedBy   User   @relation("RiskReporter", fields: [reportedById], references: [id])
+
+  ownerId String?
+  owner   User?   @relation("RiskOwner", fields: [ownerId], references: [id], onDelete: SetNull)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([projectId])
+  @@index([level])
+  @@index([status])
+}
+
+model Issue {
+  id          String  @id @default(uuid())
+  title       String
+  description String?
+
+  status   IssueStatus  @default(OPEN)
+  priority TaskPriority @default(MEDIUM)
+
+  projectId String
+  project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  reportedById String
+  reportedBy   User   @relation("IssueReporter", fields: [reportedById], references: [id])
+
+  assignedToId String?
+  assignedTo   User?   @relation("IssueAssignee", fields: [assignedToId], references: [id], onDelete: SetNull)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([projectId])
+  @@index([status])
+}
+
+model ProgressUpdate {
+  id      String @id @default(uuid())
+  percent Int
+
+  description String?
+
+  projectId String
+  project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  createdAt DateTime @default(now())
+
+  @@index([projectId])
+  @@index([createdAt])
+}
+
+model Document {
+  id           String @id @default(uuid())
+  name         String
+  originalName String
+  mimeType     String
+  size         Int
+
+  fileUrl String
+
+  projectId String
+  project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  uploadedById String
+  uploadedBy   User   @relation(fields: [uploadedById], references: [id])
+
+  createdAt DateTime @default(now())
+}
+
+model Notification {
+  id      String @id @default(uuid())
+  title   String
+  message String
+
+  type NotificationType
+
+  read Boolean @default(false)
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@index([read])
+}
